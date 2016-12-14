@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html class="no-js"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Keep Talking and Nobody Explodes Example Manual Page</title>
+    <meta name="viewport" content="initial-scale=1"> 
+	<link href='http://fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link href="css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="section">
+    <div class="page page-bg-01">
+        <div class="page-header">
+			<span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+			<span class="page-header-section-title">Connection Check</span>
+		</div>
+        <div class="page-content">
+    	    <img src="img/Component.svg" class="diagram">
+            <h2>On the Subject of Connection Check</h2>
+            <p class="flavour-text">
+					What is this, some kind of circuit visualization? I don't even care anymore...
+			</p>
+
+			<ul>
+				<li>
+					This module contains 4 number pairs placed on each side of 4 LEDs and a ''Check'' button.
+				</li>
+				<li>
+					To disarm this module, you must follow these steps:
+					<ol>
+						<li>
+							Find out in which chart you will be loking for connections, using the rules given below.
+						</li>
+						<li>
+							For each LED look at the numbers on each side of it and check if there is a line connecting the circles denoted with those numbers in the right chart.
+						</li>
+						<li>
+							If there is such a connection, switch the LED to GREEN, otherwise switch it to RED.
+						</li>
+						<li>
+							Press the ''CHECK'' button. If LED positions are correct, the module will disarm. Otherwise the bomb will register a strike.
+						</li>
+					</ol>
+				</li>
+			</ul>
+			<p> <i> To determine the right chart on the next page you will need a character of the bomb's serial number. Use the following rules to find out which character you need. Then, on the next page, search for that character in the codes just above the charts. The chart with a code containing your character is the chart you are looking for. </i> </p>
+			
+			<!-- Here are some examples of tables that we use in the manual that you can use if it makes sense -->
+			<!-- Wires table -->
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							If all of the numbers on this module are <strong>distinct</strong>, use the <strong>last</strong> character of the serial number.<br>
+							Otherwise, if there is <strong>more than one ''1''</strong> on the module, look at the <strong>first</strong> character of the serial number.<br>
+							Otherwise, if there is <strong>more than one ''7''</strong> on the module, look at the <strong>last</strong> character of the serial number.<br>
+							Otherwise, if there are <strong>at least three ''2''</strong> on the module, look at the <strong>second</strong> character of the serial number.<br>
+							Otherwise, if there is <strong>no ''5''</strong> on the module, look at the <strong>fifth</strong> character of the serial number.<br>
+							Otherwise, if there are <strong>exactly two ''8''s</strong> on the module, look at the <strong>third</strong> character of the serial number.<br>
+							Otherwise, if there are <strong>more than 6 batteries</strong> or <strong>no batteries</strong> on the bomb, look at the <strong>last</strong> character of the serial number.<br>
+							Otherwise, <strong>count the number of batteries</strong> on the bomb. Use that number to decide which character of the serial number you should look at. E.g.: if there are 3 batteries, look at the third character of the serial number.<br>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+    <div class="page page-bg-02">
+        <div class="page-header">
+			<span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+			<span class="page-header-section-title">Connection Check</span>
+		</div>
+        <div class="page-content">
+			<table class="no-border">
+				<tr>
+					<td>
+						If your digit is contained within <strong>7HPJ</strong> use this chart:
+					</td>
+					<td>
+						If your digit is contained within <strong>34XYZ</strong> use this chart:
+					</td>
+				</tr>
+				<tr>
+					<td style="height:150px;" align="center">
+						<img src="img/7HPJ.svg" class="connectivity">
+					</td>
+					<td style="height:150px;" align="center">
+						<img src="img/34XYZ.svg" class="connectivity">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						If your digit is contained within <strong>SLIM</strong> use this chart:
+					</td>
+					<td>
+						If your digit is contained within <strong>15BRO</strong> use this chart:
+					</td>
+				</tr>
+				<tr>
+					<td style="height:150px;" align="center">
+						<img src="img/SLIM.svg" class="connectivity">
+					</td>
+					<td style="height:150px;" align="center">
+						<img src="img/15BRO.svg" class="connectivity">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						If your digit is contained within <strong>20DGT</strong> use this chart:
+					</td>
+					<td>
+						If your digit is contained within <strong>8CAKE</strong> use this chart:
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<img src="img/20DGT.svg" class="connectivity">
+					</td>
+					<td style="height:150px;" align="center">
+						<img src="img/8CAKE.svg" class="connectivity">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						If your digit is contained within <strong>9QVN</strong> use this chart:
+					</td>
+					<td>
+						If your digit is contained within <strong>6WUF</strong> use this chart:
+					</td>
+				</tr>
+				<tr>
+					<td style="height:150px;" align="center">
+						<img src="img/9QVN.svg" class="connectivity">
+					</td>
+					<td style="height:150px;" align="center">
+						<img src="img/6WUF.svg" class="connectivity">
+					</td>
+				</tr>
+			</table>
+        </div>
+    </div>
+</div>
+</body></html>
