@@ -1,1 +1,1 @@
-#[ModKit Wiki](../../wiki)
+#[Connection Check Wiki](../../wiki)
