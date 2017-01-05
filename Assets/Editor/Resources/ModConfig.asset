@@ -13,5 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: ConnectionCheck
   title: Connection Check Module
-  version: 0.23
+  version: 0.24
   outputFolder: build
