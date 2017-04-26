@@ -10,21 +10,18 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5cf2299c8864afe4ab42466f546ae20d, type: 3}
   m_Name: WorkshopItem
-  m_EditorClassIdentifier: 
-  WorkshopPublishedFileID: 744314607
-  Title: Connection Check Module
-  Description: "[h1] Connection Check Module [/h1]\r\n\r\n[b] 500 subscribers! [/b]\r\nMain
-    mechanic of the module is checking the existance of line connections from a chart
-    and using that data to disarm the module. But you'll have to check the bombs serial
-    number before that. You should better read the manual to understand what I mean.\r\n\r\nLatest
-    Changes:\r\n- Click sounds added.\r\n- Now using the default module base.\r\n\r\n-
-    Joystick now works?\r\n\r\nModule comes with a short mission pack to get you started
-    with Connection Checking. Have fun!\r\n\r\nManual is included but you can grab
-    it from there as well ==> http://ktane.timwi.de/PDF/Connection%20Check.pdf\n\nModule
-    type is \"[b]graphModule[/b]\". I will be happy if want to use this module in
-    your mod/mission pack.\r\n\r\nAny comments and suggestions will be appreciated!\r\n\r\n[h1]
-    Announcement! [/h1]\r\n\r\nMy new module set! Give it a try! Cute lil creatures.
-    http://steamcommunity.com/sharedfiles/filedetails/?id=777164508\r\n"
-  PreviewImage: {fileID: 2800000, guid: acf99aabc8cbed34787642b5adeedd5c, type: 3}
+  m_EditorClassIdentifier:
+  WorkshopPublishedFileID: 802366358
+  Title: Mystic Square
+  Description: 'Inspired by the classic Mystic Square, but with a few features.
+
+
+    Module created and implemented by Konqi, currently maintained by Timwi.
+
+
+    [url=http://ktane.timwi.de/PDF/Mystic%20Square.pdf]Manual PDF[/url]
+
+    [url=http://ktane.timwi.de/HTML/Mystic%20Square.html]Manual HTML[/url]'
+  PreviewImage: {fileID: 2800000, guid: a982b048ff33c9948958da61d1ce66e3, type: 3}
   Tags:
   - Regular Module
