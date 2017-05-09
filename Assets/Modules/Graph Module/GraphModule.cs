@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using KMHelper;
+using ConnectionCheck;
+using System.Linq;
 
 public class GraphModule : MonoBehaviour
 {
-
     public KMAudio Audio;
     public KMBombInfo Info;
     public KMSelectable[] LEDS;
@@ -15,10 +15,9 @@ public class GraphModule : MonoBehaviour
     private static int _moduleIdCounter = 1;
     private int _moduleId;
 
-    int[] WhichGraphDigit = new int[] { 6, 3, 6, 1, 1, 3, 7, 0, 4, 5 }
-    // 	                          0 1 2 3 4 5 6 7 8 9
-    , WhichGraphLetter = new int[] { 4, 3, 4, 6, 4, 7, 6, 0, 2, 0, 4, 2, 2, 5, 3, 0, 5, 3, 2, 6, 7, 5, 7, 1, 1, 1 };
-    //							A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+    int[] WhichGraphDigit = new int[] { 6, 3, 6, 1, 1, 3, 7, 0, 4, 5 };
+    int[] WhichGraphLetter = new int[] { 4, 3, 4, 6, 4, 7, 6, 0, 2, 0, 4, 2, 2, 5, 3, 0, 5, 3, 2, 6, 7, 5, 7, 1, 1, 1 };
+
     Vector2[][] Neighbors = new Vector2[][]
     {
         new Vector2[]{new Vector2(1,2),new Vector2(2,3),new Vector2(1,3),new Vector2(4,6),new Vector2(5,6),new Vector2(5,7),new Vector2(4,7)}//7HPJ
@@ -75,8 +74,8 @@ public class GraphModule : MonoBehaviour
             Queries[i] = noRepeat[pos];
             noRepeat.RemoveAt(pos);
             //COUNT DIGITS FOR DECISION
-            digitCount[(int)Queries[i].x]++;
-            digitCount[(int)Queries[i].y]++;
+            digitCount[(int) Queries[i].x]++;
+            digitCount[(int) Queries[i].y]++;
             //SOMETIMES SWAP GRAPHICS
             float smol = Queries[i].x, big = Queries[i].y;
             if (Random.Range(0, 2) == 1)
@@ -220,24 +219,19 @@ public class GraphModule : MonoBehaviour
 
     KMSelectable[] ProcessTwitchCommand(string command)
     {
-        var btn = new List<KMSelectable>();
-        int temp = 0;
-
         command = command.ToLowerInvariant().Trim();
+        var trueStrings = new[] { "true", "t", "green", "g" };
 
-        if (Regex.IsMatch(command, @"^submit \b(true|false|t|f)\b \b(true|false|t|f)\b \b(true|false|t|f)\b \b(true|false|t|f)\b$"))
-        {
-            command = command.Substring(7);
-            foreach (var cell in command.Trim().Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries))
-            {
-                if ((cell.Equals("t") || cell.Equals("true")) && On[temp] == 0) btn.Add(LEDS[temp]);
-                if ((cell.Equals("f") || cell.Equals("false")) && On[temp] == 1) btn.Add(LEDS[temp]);
-                temp++;
-            }
-            btn.Add(Check);
-            return btn.ToArray();
-        }
+        if (!Regex.IsMatch(command, @"^submit(\s+(true|false|t|f|red|green|r|g)){4}$"))
+            return null;
 
-        else return null;
+        var cells = command.Substring(7).Trim().Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+        var btn = new List<KMSelectable>();
+
+        for (int i = 0; i < cells.Length; i++)
+            if (trueStrings.Contains(cells[i]) ^ (On[i] == 1))
+                btn.Add(LEDS[i]);
+        btn.Add(Check);
+        return btn.ToArray();
     }
 }

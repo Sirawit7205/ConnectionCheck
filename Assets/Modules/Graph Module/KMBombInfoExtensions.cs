@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace KMHelper
+namespace ConnectionCheck
 {
     /// <summary>
     /// Some helper extensions methods for the KMBombInfo class.
