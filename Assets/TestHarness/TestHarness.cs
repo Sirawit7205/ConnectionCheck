@@ -657,7 +657,7 @@ public class TestHarness : MonoBehaviour
     }
 
     Dictionary<Component, HashSet<KMSelectable>> ComponentHelds = new Dictionary<Component, HashSet<KMSelectable>> { };
-    IEnumerator SimulateModule(Component component, MethodInfo method, string command)
+    IEnumerator SimulateModule(Component component, Transform moduleTransform, MethodInfo method, string command)
     {
         // Simple Command
         if (method.ReturnType == typeof(KMSelectable[]))
@@ -737,6 +737,14 @@ public class TestHarness : MonoBehaviour
                         heldSelectables.Add(selectable);
                     }
                 }
+                else if (currentObject is string)
+                {
+                    Debug.Log("Twitch handler sent: " + currentObject);
+                }
+                else if (currentObject is Quaternion)
+                {
+                    moduleTransform.localRotation = (Quaternion) currentObject;
+                }
                 yield return currentObject;
             }
         }
@@ -798,7 +806,7 @@ public class TestHarness : MonoBehaviour
 
                     if (method != null)
                     {
-                        StartCoroutine(SimulateModule(component, method, command));
+                        StartCoroutine(SimulateModule(component, module.transform, method, command));
                     }
                 }
             }
