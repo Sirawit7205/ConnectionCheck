@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ConnectionCheck;
-using System.Linq;
+using UnityEngine;
 
 public class GraphModule : MonoBehaviour
 {
@@ -34,7 +34,7 @@ public class GraphModule : MonoBehaviour
     int[] On, digitCount;
     int graphID = -1;
     bool _isSolved = false, _lightsOn = false;
-    Dictionary<Vector2, bool> dict = new Dictionary<Vector2, bool>();
+    HashSet<Vector2> dict = new HashSet<Vector2>();
 
     void Start()
     {
@@ -156,7 +156,7 @@ public class GraphModule : MonoBehaviour
 
         //ADD CONNECTED PAIRS
         for (int i = 0; i < Neighbors[graphID].Length; i++)
-            dict.Add(Neighbors[graphID][i], true);
+            dict.Add(Neighbors[graphID][i]);
 
         //LEDs INIT
         for (int i = 0; i < 4; i++)
@@ -166,6 +166,9 @@ public class GraphModule : MonoBehaviour
                 LEDR[i].SetActive(true);
 
         Debug.LogFormat("[Connection Check #{0}] Target letter is {1}, using graph {2}", _moduleId, dgt, graphName[graphID]);
+        for (int i = 0; i < 4; i++)
+            Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} should be {3}.", _moduleId, Queries[i].x, Queries[i].y, dict.Contains(Queries[i]));
+
         _lightsOn = true;
     }
 
@@ -184,8 +187,6 @@ public class GraphModule : MonoBehaviour
     }
     void OnPressCheck()
     {
-        string[] temp = { "false", "true" };
-
         GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Check.transform);
         Check.AddInteractionPunch();
 
@@ -194,14 +195,13 @@ public class GraphModule : MonoBehaviour
             bool win = true;
             for (int i = 0; i < 4; i++)
             {
-                bool tempo;
-                bool lineExists = dict.TryGetValue(Queries[i], out tempo);
-                if (lineExists != (On[i] == 1))
+                if (dict.Contains(Queries[i]) != (On[i] == 1))
                 {
                     win = false;
-                    Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} with answer {3} is incorrect.", _moduleId, Queries[i].x, Queries[i].y, temp[On[i]]);
+                    Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} with answer {3} is incorrect.", _moduleId, Queries[i].x, Queries[i].y, On[i] == 1);
                 }
-                else Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} with answer {3} is correct.", _moduleId, Queries[i].x, Queries[i].y, temp[On[i]]);
+                else
+                    Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} with answer {3} is correct.", _moduleId, Queries[i].x, Queries[i].y, On[i] == 1);
             }
             if (win)
             {
@@ -212,7 +212,7 @@ public class GraphModule : MonoBehaviour
             else
             {
                 GetComponent<KMBombModule>().HandleStrike();
-                Debug.LogFormat("[Logic #{0}] Answer is incorrect. Strike!", _moduleId);
+                Debug.LogFormat("[Connection Check #{0}] Answer is incorrect. Strike!", _moduleId);
             }
         }
     }
