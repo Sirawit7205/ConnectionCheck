@@ -213,7 +213,7 @@ public class GraphModule : MonoBehaviour
             else
             {
                 GetComponent<KMBombModule>().HandleStrike();
-                Debug.LogFormat("[Logic #{0}] Answer is incorrect. Strike!", _moduleId);
+                Debug.LogFormat("[Connection Check #{0}] Answer is incorrect. Strike!", _moduleId);
             }
         }
     }
