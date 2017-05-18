@@ -1,11 +1,11 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
-using KMHelper;
+using ConnectionCheck;
+using UnityEngine;
 
 public class GraphModule : MonoBehaviour
 {
-
     public KMAudio Audio;
     public KMBombInfo Info;
     public KMSelectable[] LEDS;
@@ -15,10 +15,9 @@ public class GraphModule : MonoBehaviour
     private static int _moduleIdCounter = 1;
     private int _moduleId;
 
-    int[] WhichGraphDigit = new int[] { 6, 3, 6, 1, 1, 3, 7, 0, 4, 5 }
-    // 	                          0 1 2 3 4 5 6 7 8 9
-    , WhichGraphLetter = new int[] { 4, 3, 4, 6, 4, 7, 6, 0, 2, 0, 4, 2, 2, 5, 3, 0, 5, 3, 2, 6, 7, 5, 7, 1, 1, 1 };
-    //							A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+    int[] WhichGraphDigit = new int[] { 6, 3, 6, 1, 1, 3, 7, 0, 4, 5 };
+    int[] WhichGraphLetter = new int[] { 4, 3, 4, 6, 4, 7, 6, 0, 2, 0, 4, 2, 2, 5, 3, 0, 5, 3, 2, 6, 7, 5, 7, 1, 1, 1 };
+
     Vector2[][] Neighbors = new Vector2[][]
     {
         new Vector2[]{new Vector2(1,2),new Vector2(2,3),new Vector2(1,3),new Vector2(4,6),new Vector2(5,6),new Vector2(5,7),new Vector2(4,7)}//7HPJ
@@ -35,7 +34,7 @@ public class GraphModule : MonoBehaviour
     int[] On, digitCount;
     int graphID = -1;
     bool _isSolved = false, _lightsOn = false;
-    Dictionary<Vector2, bool> dict = new Dictionary<Vector2, bool>();
+    HashSet<Vector2> dict = new HashSet<Vector2>();
 
     void Start()
     {
@@ -75,8 +74,8 @@ public class GraphModule : MonoBehaviour
             Queries[i] = noRepeat[pos];
             noRepeat.RemoveAt(pos);
             //COUNT DIGITS FOR DECISION
-            digitCount[(int)Queries[i].x]++;
-            digitCount[(int)Queries[i].y]++;
+            digitCount[(int) Queries[i].x]++;
+            digitCount[(int) Queries[i].y]++;
             //SOMETIMES SWAP GRAPHICS
             float smol = Queries[i].x, big = Queries[i].y;
             if (Random.Range(0, 2) == 1)
@@ -157,7 +156,7 @@ public class GraphModule : MonoBehaviour
 
         //ADD CONNECTED PAIRS
         for (int i = 0; i < Neighbors[graphID].Length; i++)
-            dict.Add(Neighbors[graphID][i], true);
+            dict.Add(Neighbors[graphID][i]);
 
         //LEDs INIT
         for (int i = 0; i < 4; i++)
@@ -167,6 +166,9 @@ public class GraphModule : MonoBehaviour
                 LEDR[i].SetActive(true);
 
         Debug.LogFormat("[Connection Check #{0}] Target letter is {1}, using graph {2}", _moduleId, dgt, graphName[graphID]);
+        for (int i = 0; i < 4; i++)
+            Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} should be {3}.", _moduleId, Queries[i].x, Queries[i].y, dict.Contains(Queries[i]));
+
         _lightsOn = true;
     }
 
@@ -185,8 +187,6 @@ public class GraphModule : MonoBehaviour
     }
     void OnPressCheck()
     {
-        string[] temp = { "false", "true" };
-
         GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Check.transform);
         Check.AddInteractionPunch();
 
@@ -195,14 +195,13 @@ public class GraphModule : MonoBehaviour
             bool win = true;
             for (int i = 0; i < 4; i++)
             {
-                bool tempo;
-                bool lineExists = dict.TryGetValue(Queries[i], out tempo);
-                if (lineExists != (On[i] == 1))
+                if (dict.Contains(Queries[i]) != (On[i] == 1))
                 {
                     win = false;
-                    Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} with answer {3} is incorrect.", _moduleId, Queries[i].x, Queries[i].y, temp[On[i]]);
+                    Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} with answer {3} is incorrect.", _moduleId, Queries[i].x, Queries[i].y, On[i] == 1);
                 }
-                else Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} with answer {3} is correct.", _moduleId, Queries[i].x, Queries[i].y, temp[On[i]]);
+                else
+                    Debug.LogFormat("[Connection Check #{0}] Pair of {1},{2} with answer {3} is correct.", _moduleId, Queries[i].x, Queries[i].y, On[i] == 1);
             }
             if (win)
             {
@@ -213,31 +212,26 @@ public class GraphModule : MonoBehaviour
             else
             {
                 GetComponent<KMBombModule>().HandleStrike();
-                Debug.LogFormat("[Logic #{0}] Answer is incorrect. Strike!", _moduleId);
+                Debug.LogFormat("[Connection Check #{0}] Answer is incorrect. Strike!", _moduleId);
             }
         }
     }
 
     KMSelectable[] ProcessTwitchCommand(string command)
     {
-        var btn = new List<KMSelectable>();
-        int temp = 0;
-
         command = command.ToLowerInvariant().Trim();
+        var trueStrings = new[] { "true", "t", "green", "g" };
 
-        if (Regex.IsMatch(command, @"^submit \b(true|false|t|f)\b \b(true|false|t|f)\b \b(true|false|t|f)\b \b(true|false|t|f)\b$"))
-        {
-            command = command.Substring(7);
-            foreach (var cell in command.Trim().Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries))
-            {
-                if ((cell.Equals("t") || cell.Equals("true")) && On[temp] == 0) btn.Add(LEDS[temp]);
-                if ((cell.Equals("f") || cell.Equals("false")) && On[temp] == 1) btn.Add(LEDS[temp]);
-                temp++;
-            }
-            btn.Add(Check);
-            return btn.ToArray();
-        }
+        if (!Regex.IsMatch(command, @"^submit(\s+(true|false|t|f|red|green|r|g)){4}$"))
+            return null;
 
-        else return null;
+        var cells = command.Substring(7).Trim().Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+        var btn = new List<KMSelectable>();
+
+        for (int i = 0; i < cells.Length; i++)
+            if (trueStrings.Contains(cells[i]) ^ (On[i] == 1))
+                btn.Add(LEDS[i]);
+        btn.Add(Check);
+        return btn.ToArray();
     }
 }
